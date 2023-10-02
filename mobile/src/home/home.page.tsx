@@ -8,7 +8,7 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this.findAllAnimal()        
+        this.findAllAnimal()
     }
 
     state = {
@@ -16,22 +16,22 @@ export default class Home extends React.Component {
         value: null,
         onChangeText: null,
         dataId: null,
-        dataInsert:null
+        dataInsert: null
     }
 
     //acionado quando o componente e montado
-    componentDidMount () {
-        this.findAllAnimal ();
-      }
+    componentDidMount() {
+        this.findAllAnimal();
+    }
 
-      //escuta atualizações na lista
-      componentDidUpdate (prevProps, prevState) {
+    //escuta atualizações na lista
+    componentDidUpdate(prevProps, prevState) {
         if (prevState.data !== this.state.data) {
-          this.findAllAnimal ();
+            this.findAllAnimal();
         }
-      }
-   
-    deleteAnimal=(id)=> {
+    }
+
+    deleteAnimal = (id) => {
         this.findAnimalById(id)
         if (this.state.dataId != null || this.state.dataId != undefined) {
             AnimalService.deleteById(id)
@@ -39,17 +39,17 @@ export default class Home extends React.Component {
         }
     }
 
-    insertAnimal=(item)=> {
-        let file:Animal=new Animal()
-        file.nome=item
+    insertAnimal = (item) => {
+        let file: Animal = new Animal()
+        file.nome = item
 
-        const insertId=AnimalService.addData(file);
-        if(insertId==null || insertId==undefined){
+        const insertId = AnimalService.addData(file);
+        if (insertId == null || insertId == undefined) {
             alert("Não foi possivel inserir o novo animal")
         }
     }
 
-    findAllAnimal=()=> {
+    findAllAnimal = () => {
         AnimalService.findAll()
             .then((response: any) => {
                 this.setState({
@@ -60,10 +60,10 @@ export default class Home extends React.Component {
                 console.log(error);
             }
     }
-    findAnimalById=(id)=> {
+    findAnimalById = (id) => {
         AnimalService.findById(id)
             .then((response: any) => {
-                if (response._array.length >0 && response!= null && response!= undefined) {
+                if (response._array.length > 0 && response != null && response != undefined) {
                     this.setState({
                         dataId: response._array[0]
                     })
@@ -77,8 +77,8 @@ export default class Home extends React.Component {
     render() {
 
         //extrai as propriedades entre chaves
-        const {data,value,dataInsert} = this.state;
-        
+        const { data, value, dataInsert } = this.state;
+
         const animalList = data.map((item, key) => {
             return (
                 <>
@@ -98,8 +98,8 @@ export default class Home extends React.Component {
                     onChangeText={text => { this.setState({ value: text }) }}
                     value={value}
                 />
-               <View style={styles.containerTouch}>
-                    <TouchableOpacity onPress={() => { value == null ? alert("O campo de id não pode ser vazio") : this.deleteAnimal(value) }} style={{ alignItems: "center", backgroundColor: 'green' }}>
+                <View style={styles.containerTouch}>
+                    <TouchableOpacity onPress={() => { value == null ? alert("O campo de id não pode ser vazio") : this.deleteAnimal(value) }} style={styles.btnRemove}>
                         <Icon name="md-remove" size={30} color="white" />
                     </TouchableOpacity>
                 </View>
@@ -109,9 +109,9 @@ export default class Home extends React.Component {
                     onChangeText={textAdd => { this.setState({ dataInsert: textAdd }) }}
                     value={dataInsert}
                 />
-               
+
                 <View style={styles.containerTouch}>
-                    <TouchableOpacity onPress={() =>  dataInsert == null ? alert("O campo de nome não pode ser vazio") :this.insertAnimal(dataInsert)} style={{ alignItems: "center", backgroundColor: 'green' }}>
+                    <TouchableOpacity onPress={() => dataInsert == null ? alert("O campo de nome não pode ser vazio") : this.insertAnimal(dataInsert)} style={ styles.btnAdd }>
                         <Icon name="md-add" size={30} color="white" />
                     </TouchableOpacity>
                 </View>
@@ -129,15 +129,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    textInput:{
-        alignItems: "center", 
-        width: 200, 
-        height: 40, 
-        borderColor: 'gray', 
-        borderWidth: 1 
-    },
-    containerTouch:{
+    textInput: {
+        alignItems: "center",
         width: 200,
-         padding: 10
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10
+    },
+    containerTouch: {
+        padding: 10,
+        borderRadius: 5
+    },
+
+    btnRemove: {
+        alignItems: "center",
+        backgroundColor: 'red',
+        borderRadius: 50
+    },
+    btnAdd: {
+        alignItems: "center",
+        backgroundColor: 'green',
+        borderRadius: 50
     }
 });
